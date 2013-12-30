@@ -1,0 +1,83 @@
+  (function() {
+
+
+    //同类漫画加载     
+	  var typeId = location.search.split("&")[1].split("=")[1];
+	  get_similarClass(typeId);
+  
+    //剧集漫画变更    
+    var $hua = []; 
+    function get_updateSource(resourceId) {
+      $.ajax({
+        url: config.common.url_updateSource,
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          "resourceId": resourceId
+        },
+        error: function() {
+        	alert(config.common.error);
+        },
+        success: function(reData) {
+
+          if (reData.ret) {
+            var data = reData.data.comic_attr;
+            var len = data.length;
+            var PAGELEN = 50;
+            var pages = len % PAGELEN == 0 ? (len / PAGELEN) : (len / PAGELEN + 1);
+            var $page = "";
+            
+            //话分组
+            for (var i = 1; i <= pageLen; i++) {
+              $page = $page + $(' <span id="' + (i * PAGELEN) + '">' + i + '~' + (i * PAGELEN) + '</span>');
+            }
+            //每一话
+            for (var j = 1; j <= len; j++) {
+              $hua.push($('<li><a href="' + config.common.url_hua + data[j - 1].comicsId + '&typeId='+ata[j - 1].typeId+'">' + data[i].name + '</a><li>'));
+            }
+            $("#hua-pagesId").empty().append($page);
+            $("#episodeId").empty().append(getComics($hua, 50, PAGELEN));
+
+          }
+        }
+      });
+    }
+
+    function getComics($hua, index, pageLen) {
+      return $hua.substr(index - pageLen, index);
+    }
+
+    $(".episode > li").each(function() {
+      if (($(this).index() + 1) % 10 == 0) {
+        $(this).addClass("episode-right");
+
+      }
+
+    });
+
+    /**事件绑定区**/
+    //资源来源切换
+    $(".source>a").click(function() {
+      var $this = $(this);
+      $this.addClass("s-sel");
+      $this.siblings().removeClass("s-sel");
+    });
+    //集数切换
+    $(".hua-pages>span").click(function() {
+      var $this = $(this);
+      $this.addClass("s-sel");
+      $this.siblings().removeClass("s-sel");
+      var indexEnd = $this.attr(id);
+      $("#episodeId").empty().append(getComics($hua, indexEnd-PAGELEN, indexEnd-1));
+
+
+    });
+    //集数划过效果
+    $("ul.episode>li").bind("mouseover", function() {
+      var $this = $(this);
+      $this.addClass("episode-sel");
+      $this.siblings().removeClass("episode-sel");
+    });
+
+
+  })();

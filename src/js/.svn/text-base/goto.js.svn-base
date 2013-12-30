@@ -1,0 +1,30 @@
+(function() {
+  var goTop = $("#div_gotop");
+  GotopApp = {
+    init: function() {
+      if (!-[1,]&&!window.XMLHttpRequest) {
+        this.scrollMethod(".page", ".page");
+      } else {
+        this.scrollMethod(window, "body,html");
+      }
+    },
+    scrollMethod: function(window, body) {
+      $(window).scroll(function() {
+        if ($(this).scrollTop() === 0) {
+          goTop.fadeOut();
+        }
+        if ($(this).scrollTop() > 0) {
+          goTop.fadeIn();
+        }
+      });
+      goTop.click(function() {
+        $(body).animate({
+          scrollTop: 0
+        }, 400, function() {
+          goTop.stop().fadeOut();
+        });
+      });
+    }
+  }
+  GotopApp.init();
+})();

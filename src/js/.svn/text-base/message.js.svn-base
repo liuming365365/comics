@@ -1,0 +1,379 @@
+var flag = 0;
+var guan="aa";
+var countImg=1;
+var W = document.documentElement.clientWidth; //获取页面宽度与高度
+var H = document.documentElement.clientHeight;
+var $m = $("#im2");
+var left=$("#left_1");
+var right=$("#right_1");
+var count=0;
+var srcArry=new Array();
+$(document).ready(function() {
+    var episode=location.search.split("=")[1];
+    var htm = "";
+    $.ajax({
+     url: '/comics/getcomicslist.do',
+     type: 'GET',
+     dataType: "json",
+     data: {
+         "episodeId": episode
+     },
+     error: function(xhr) {
+       alert('发生错误!');
+     },
+     success: function(json) {
+    	 if(json.ret){
+    		   var newd = json.data.comic_attr;
+		       var lens = newd.length;
+		       var temp = new Array(lens);
+		       var html="";
+		       for (var i = 0; i < lens; i++) {
+		         temp[i] = newd[i];   
+		         html =  html+("<li><img src='" + newd[i] + "' id='i'></li>");
+		       }
+		       $("#ul").append(html);
+		       for(var j=0;j<lens;j++){
+		        srcArry[j]=temp[j];
+		       }
+    		 
+    	 }
+      
+     }
+   });  
+ });
+
+function p_Parent(content) {
+    this.content = content; //有一个属性
+};
+p_Parent.prototype = {
+    constructor: p_Parent,
+    showMessage: function(divM, callback) {
+        if (flag == 0) {
+            $("#" + divM).show("fast", callback);
+            flag = 1;
+        }
+    },
+    addMessage: function(divM) {
+        $("#" + divM).css({
+            "color": "black",
+            "border": "1px solid #f6851f"
+        });
+    },
+    removeMessage: function(divM) {
+        $("#" + divM).css("border", "1px solid black");
+    },
+    disableMessage: function(divM) {
+        if (flag == 1) {
+            $("#" + divM).hide("fast");
+            flag = 0;
+            $m.show();
+        }
+    },
+    centerMessage: function(divM) {
+        var Wi = $("#" + divM).width();
+        var Hi = $("#" + divM).height();
+        $("#" + divM).animate({
+            "margin-top": H / 2 - Hi / 2,
+            "left": W - Wi - 5,
+        });
+    },
+	centerRight:function(divM){
+		 var that = this;
+		 var Hi = $("#" + divM).height();
+		 $("#" + divM).css("top",H / 2);
+	},
+    clearMessage: function(divM, defaultC) {
+        if ($("#" + divM).val() == defaultC) {
+            $("#" + divM).val(" ");
+        } else {
+            return false;
+        }
+    },
+    restoration: function(divM) {
+        if ($("#" + divM).val() == " ") {
+            $("#" + divM).val("评论不能少于5字...");
+        } else {
+            return false;
+        }
+    },
+    stopAnimate: function(divM) {
+        $("#" + divM).stop(true, true);
+    },
+    clearAllMessage: function(divM) {
+        $("#" + divM).val(" ").removeAttr("disable");
+        
+    },
+    clearPeople: function() {
+        $("#context").text(" ").removeAttr("disable");
+    },
+    appendDiv: function(data) {
+        var that = this;
+        if (data.length > 10) {
+            $("#context").append("<span>" + data + "</span><br><br><hr/>");
+            that.scollTdis("other");
+            $("#contentPart").removeAttr("disable");
+        } else {
+            alert("多说点嘛（* $ *）");
+            return false;
+        }
+    },
+    getRequestData: function(callback,imageid) {		
+        var that = this;
+        $.ajax({
+            url: 'getposts.do',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                "imageId": imageid
+            },
+            error: function(xhr) {
+                alert("失败");
+            },
+            success: function(json) {
+                var htm = "";
+                var timeName = "";
+                var con = "";
+                var newd = json.data;
+                var len = newd.length;
+                for (var i = 0; i < len; i++) {
+                    timeName = '<hr/><p class="nametime">' + newd[i].username + '&nbsp;' + newd[i].time + '<span class="floor">' + (i + 1) + '楼</span></p>';
+                    if (i != len - 1) {
+                        con = '<span>' + newd[i].context + '</span><br/><br/>';
+                    } else {
+                        con = '<span>' + newd[i].context + '</span>';
+                    }
+                    htm += timeName + con;
+                }
+                that.appendDiv(htm);
+                $(".nametime").addClass("addtnColor");
+                callback && callback();
+
+            }
+        });
+    },
+    submite:function(ID,name,cona){
+    	var that = this;
+    	$.ajax({
+    		url: 'post.do',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                "imageId":ID,
+                "username":name,
+                "context":cona,
+            },
+            error: function(xhr) {
+                alert("失败");
+            },
+            success: function(data) {
+                var htm = "";
+                var timeName = "";
+                var con = "";
+                var newd = data.data;
+                var len = newd.length;
+                for (var i = 0; i < len; i++) {
+                    timeName = '<hr/><p class="nametime">' + newd[i].username + '&nbsp;' + newd[i].time + '<span class="floor">' + (i + 1) + '楼</span></p>';
+                    if (i != len - 1) {
+                        con = '<span>' + newd[i].context + '</span><br/><br/>';
+                    } else {
+                        con = '<span>' + newd[i].context + '</span>';
+                    }
+                    htm += timeName + con;
+                }
+                that.appendDiv(htm);
+                $(".nametime").addClass("addtnColor");
+                that.scollTdis("other");
+            }
+    		
+    	});
+    	
+    },
+    scollTdis: function(data) {
+        $("#" + data)[0].scrollTop = $("#context").height();
+
+    },
+    leftShoing: function(data) {
+        var that = this;
+        var arr = document.getElementsByTagName("li");
+        var len = arr.length - 1;
+        var $u = $("ul");
+        if ( countImg==1) {
+            return false;
+        } else {
+            countImg--;
+            $u.animate({
+                left: "+=856px"
+            }, 500);
+            that.clearPeople();
+            that.disableMessage("people");
+        }
+    },
+    rightShoing: function(data) {
+        var that = this;     
+        var arr = document.getElementsByTagName("li");
+        var len = arr.length - 1;
+        var $u = $("ul");
+        if (countImg==len+1) {
+            return false;
+        } else {
+            countImg++;
+            $u.animate({
+                left: "-=856px"
+            }, 500);
+            that.clearPeople();
+            that.disableMessage("people");
+        }
+    },
+    clearDisable:function(data){
+    	$("#"+data).removeAttr("disabled");
+    },
+};
+
+
+
+
+
+
+ function p_Message() {
+   p_Parent.call(this, "我是留言板");
+   this.init = function() {
+     this.messageShow();
+     this.changepart();
+     this.messageClose();
+     this.makesures();
+     this.resetsBut();
+   };
+   this.messageShow = function() {
+     var that = this;
+     $m.click(function() {
+       var srcdata=srcArry[countImg-1];
+       that.getRequestData(function() {
+         that.centerMessage("people");
+         that.showMessage("people", function() {
+           $("#other")[0].scrollTop = $("#context").height();
+         });
+       },srcdata);
+       $m.hide();
+     });
+
+
+   };
+   this.messageClose = function() {
+     var that = this;
+     var $clo = $("#closeC");
+     $clo.click(function() {
+       that.disableMessage("people");
+       return false;
+     });
+
+   };
+   this.changepart = function() {
+     var that = this;
+     var content = $("#contentPart").val();
+     $("#contentPart").focus(function() { 
+       that.addMessage("contentPart");
+       that.clearMessage("contentPart", content);
+       that.stopAnimate("people");
+     });
+     $("#contentPart").on("input",function(){
+    	 var valueLen=this.value.length-1;    	 
+    	 if(valueLen>=90){
+    		 $(this).blur().attr('disabled', 'disabled');
+    	 }
+     });
+     $("#contentPart").blur(function() {
+       that.removeMessage("contentPart");
+       that.restoration("contentPart");
+       that.stopAnimate("people");
+     });
+
+   };
+   this.makesures = function() {
+     var that = this;
+     $("#makesure").click(function() {
+    	var srcc=srcArry[countImg-1];
+       var valu = $("#contentPart").val();
+       if(valu!=null){
+    	  that.submite(srcc,guan,valu);
+    	  that.clearDisable("contentPart");
+       }else{
+    	   console.log("kong");
+       }
+      
+       that.clearPeople("contentPart");
+       that.clearAllMessage("contentPart"); 
+ 
+     });
+     
+   };
+   this.resetsBut = function() {
+     var that = this;
+     $("#resets").click(function() {
+       that.clearAllMessage("contentPart");
+       that.clearDisable("contentPart");
+     });
+   };
+
+ };
+ p_Message.prototype = new p_Parent();
+ var p = new p_Message();
+ p.init();
+ 
+ //左右键子类
+ function p_leftRight() {
+    p_Parent.call(this, "左右图标");
+    this.init = function() {
+        this.leftShow();
+        this.rightShow();
+        this.goRight();
+        this.goLeftRight();
+
+    };
+    this.leftShow = function() {
+        var that = this;
+        $("#left_1").click(function() {
+            that.leftShoing("left_1");
+        });
+
+    };
+    this.rightShow = function() {
+        var that = this;
+        $("#right_1").click(function() {
+            that.rightShoing("right_1");
+        });
+    };
+    this.goRight=function(){
+    	var that=this;
+    	
+    	 $(document).mousemove(function(e){
+    		 var arr = document.getElementsByTagName("li");
+             var len = arr.length - 1;
+             var $u = $("ul").position().left;
+    		 var hei = e.pageY - 30;
+    		 var dis=len*(-856);
+    		 var mousewid = e.pageX;
+    		 if ((e.pageX > W * 0.5 || $u == 0) && $u!=dis) {
+     	    	right.fadeTo(500, 0.4);
+     	   	 	left.css("display", "none");
+     	   	 	that.centerRight("right_1");
+     	   }else if(e.pageX < W * 0.5 || $u ==dis){
+     		   left.fadeTo(500, 0.4);
+     		   right.css("display", "none");
+     		   that.centerRight("left_1");
+     	   }
+    	 });   	 
+    };
+    this.goLeftRight=function(){
+    	var that=this;
+    	$("body").keydown(function(event){
+    		if(event.keyCode==37) {
+    			that.leftShoing("left_1");
+    		}else if(event.keyCode==39){
+    			that.rightShoing("right_1");
+    		}
+    	});
+    }
+};
+p_leftRight.prototype = new p_Parent();
+var pe = new p_leftRight();
+pe.init();

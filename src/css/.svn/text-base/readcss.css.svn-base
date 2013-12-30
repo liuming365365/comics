@@ -1,0 +1,174 @@
+#boder_1{
+ 	position: relative;
+ 	width: 865px;
+ 	margin: 0 auto;
+     _height:100%;
+     _width:100%;
+     _overflow:auto;
+
+}
+#head_1{
+	width:865px;
+	height: 46px;
+	border-bottom: 1px solid #f6851f;
+	padding-top: 20px;
+	padding-bottom: 20px;
+
+}
+#content_1{	
+	width:856px;
+	height: 1325px;
+	position: relative;	
+  	margin-top: 20px;
+	overflow: hidden;
+	margin: 0 auto;
+}
+#name_1{
+	font-size: 24px;
+	text-align: left;
+	font-weight: bold;
+	float: left;
+}
+#meun_1{
+	width: 88px;
+	height: 30px;
+	margin-left: 180px;
+}
+#but_1{
+	width: 88px;
+	height: 30px;
+	color: white;
+	background-color: #f6851f;
+}
+#number_1{
+	font-size: 16px;
+	text-align: left;
+	color: #7B7B7B;
+}
+#people{
+	display: none;
+	width: 400px;
+	height: 500px;
+	background-color: white;
+	border:1px solid #f6851f;
+	z-index: 9999;
+	position: fixed;
+    _position:absolute;
+}
+.little{
+    position: fixed;
+    _position:absolute;
+    right: 0;   
+    z-index: 2;
+ }
+#div_gotop{
+	 bottom: 0px;
+   	 display: none;  
+ }
+ #mess{
+ 	 bottom: 45px;
+ }
+   	
+#right_1,#left_1{
+	display: none;
+	position: fixed;
+    _position:absolute;
+}
+#right_1{
+	right:20%;
+}
+#left_1{
+	left:20%;
+}
+ li img{
+ 	width: 856px;
+	text-align: center;
+	}
+#ul{
+	width: 10000px;
+	position: absolute;
+	left:0;
+	top:0;
+	height: 1325px;
+}
+ li{
+	width:856px;
+	height: 1325px;
+	float: left;
+	_display:inline;
+	text-align: center;
+}
+#Contac{	
+	width: 400px;
+	height: 200px;
+	border:1px solid  #f6851f;
+	position: absolute;
+	bottom: 0px;
+	right:0px;
+	margin-bottom: 0px;	
+}
+#titleC,#footC,#titleO{
+	width: 400px;
+	height: 25px;
+	background-color:  #f6851f;
+}
+.say,#footC{
+	font-size: 22px;
+	float: left;
+	font-family: '华文新魏';
+}
+#bodyC{
+	width: 400px;
+	height:150px;
+	background-color: white;
+}
+#closeC{
+	width:18px;
+	height:18px;
+	background-color: white;
+	float: right;
+	border:1px solid #f6851f;
+}
+#contentPart{
+	margin: 0 auto;
+	margin-top: 5px;
+	width: 380px;
+	height: 140px;
+	border:1px solid black;
+	color: #CCCCCC;
+}
+#makesure,#resets{
+	float: right;
+	font-size: 14px;
+}
+#people,#titleO,#closeC,#contentPart{
+	border-top-left-radius: 1em 1em;
+	border-top-right-radius: 1em 1em;	
+}
+#people,#footC,#Contac,#contentPart,#closeC{
+	border-bottom-left-radius: 1em 1em;
+	border-bottom-right-radius: 1em 1em;
+}
+#other{ 
+	text-align: left;
+	overflow: auto;
+	margin: 0 auto;
+	width: 370px;
+	height: 268px;
+	border:1px solid #f6851f;
+}
+hr{
+	border:1.5px dotted #f6851f;
+}
+.addtnColor{
+	color: #f6851f;
+	font-size: 20px;
+	font-family: '华文新魏';
+}
+.floor{
+	font-size: 14px;
+	position: relative;
+	float:right;
+	font-family: '华文新魏';
+}
+
